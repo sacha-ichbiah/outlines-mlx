@@ -1,0 +1,134 @@
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "outlines"
+version = "0.0.22"
+authors= [{name = "Outlines Developers"}]
+description = "Probabilistic Generative Model Programming"
+requires-python = ">=3.8"
+keywords=[
+    "machine learning",
+    "deep learning",
+    "language models",
+    "guided generation",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+   "interegular",
+   "jinja2",
+   "lark",
+   "nest_asyncio",
+   "numpy",
+   "perscache",
+   "pydantic>=2.0",
+   "scipy",
+   "torch>=2.1",
+   "numba",
+   "joblib",
+   "referencing",
+   "jsonschema",
+   "requests",
+]
+
+[project.optional-dependencies]
+test = [
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "transformers",
+    "coverage[toml]>=5.1",
+    "diff-cover",
+    "accelerate",
+    "beartype<0.16.0",
+    "datasets",
+    "responses",
+]
+
+[project.urls]
+homepage = "https://github.com/outlines-dev/outlines"
+documentation = "https://outlines-dev.github.io/outlines/"
+repository = "https://github.com/outlines-dev/outlines"
+
+[project.readme]
+file="README.md"
+content-type = "text/markdown"
+
+[tool.setuptools]
+packages = ["outlines"]
+
+[tool.setuptools.package-data]
+"outlines" = ["py.typed"]
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "error",
+    "ignore::numba.core.errors.NumbaPendingDeprecationWarning",
+    "ignore::pydantic.warnings.PydanticDeprecatedSince20",
+    "ignore::FutureWarning:transformers.*",
+    "ignore::UserWarning:torch.cuda.*"
+]
+
+[tool.mypy]
+exclude=["examples"]
+
+[[tool.mypy.overrides]]
+module = [
+    "awq.*",
+    "auto_gptq.*",
+    "jinja2",
+    "joblib.*",
+    "jsonschema.*",
+    "openai.*",
+    "mamba_ssm.*",
+    "nest_asyncio",
+    "numpy.*",
+    "perscache.*",
+    "pydantic.*",
+    "pytest",
+    "referencing.*",
+    "scipy.*",
+    "tiktoken.*",
+    "torch",
+    "transformers.*",
+    "lark.*",
+    "interegular.*",
+    "datasets.*",
+    "numba.*",
+    "requests.*",
+    "responses.*",
+]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+omit = [
+    "outlines/_version.py",
+    "tests/*",
+]
+branch = true
+
+[tool.coverage.report]
+omit = [
+    "tests/*",
+]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "...",
+]
+show_missing = true
+
+[tool.diff_cover]
+compare_branch = "origin/main"
+diff_range_notation = ".."
