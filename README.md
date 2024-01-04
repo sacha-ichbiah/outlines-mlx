@@ -13,6 +13,7 @@ Combined with [MLX](https://github.com/ml-explore/mlx), it allows to perform gui
 ## Installation
 ``` bash
 git clone sachaichbiah/outlines-mlx
+cd outlines-mlx
 pip install -e . 
 ```
 
@@ -64,19 +65,8 @@ import outlines
 model = outlines.models.mlx("mistralai/Mistral-7B-Instruct-v0.2",model_kwargs={'trust_remote_code':True, 'quantize':True, 'q_group_size':64,"q_bits":4, "test_loading_instruct":True,"force_conversion":True},tokenizer_kwargs= {'trust_remote_code':True})
 
 prompt = "What is the IP address of the Google DNS servers? "
-unguided = outlines.generate.text(model, max_tokens=30)(prompt)
-guided = outlines.generate.regex(
-    model,
-    r"((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)",
-    max_tokens=30,
-)(prompt)
 
-print(unguided)
-# What is the IP address of the Google DNS servers?
-#
-# Passive DNS servers are at DNS servers that are private.
-# In other words, both IP servers are private. The database
-# does not contain Chelsea Manning
+guided = outlines.generate.regex(model, r"((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)", max_tokens=30)(prompt)
 
 print(guided)
 # What is the IP address of the Google DNS servers?
