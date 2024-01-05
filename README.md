@@ -12,7 +12,7 @@ Combined with [MLX](https://github.com/ml-explore/mlx), it allows to perform gui
 
 ## Installation
 ``` bash
-git clone sachaichbiah/outlines-mlx
+git clone sacha-ichbiah/outlines-mlx
 cd outlines-mlx
 pip install -e . 
 ```
