@@ -60,7 +60,6 @@ answer = outlines.generate.choice(model, ["Positive", "Negative"])(prompt)
 ``` python
 import outlines
 
-
 #model = outlines.models.mlx("microsoft/phi-2",model_kwargs={'trust_remote_code':True, 'quantize':True, 'q_group_size':64,"q_bits":4, "force_conversion":True}, tokenizer_kwargs= {'trust_remote_code':True})
 model = outlines.models.mlx("mistralai/Mistral-7B-Instruct-v0.2",model_kwargs={'trust_remote_code':True, 'quantize':True, 'q_group_size':64,"q_bits":4, "test_loading_instruct":True,"force_conversion":True},tokenizer_kwargs= {'trust_remote_code':True})
 
