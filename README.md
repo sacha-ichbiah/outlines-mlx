@@ -77,3 +77,15 @@ print(guided)
 
 This library is not up to date. It was designed to perform experiments with guided generation on Apple Silicon M1/M2. Please check the original [Outlines](https://github.com/outlines-dev/outlines/) library for an up-to-date implementation. 
 
+### Citation
+
+Do not forget to cite the original paper !
+
+``` bash
+@article{willard2023efficient,
+  title={Efficient Guided Generation for LLMs},
+  author={Willard, Brandon T and Louf, R{\'e}mi},
+  journal={arXiv preprint arXiv:2307.09702},
+  year={2023}
+}
+```
