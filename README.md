@@ -40,7 +40,7 @@ The supported models are:
 Check the original [Outlines](https://github.com/outlines-dev/outlines/) library for more use cases.
 
 ``` python
-import outlines
+import outlinesmlx as outlines
 
 model = outlines.models.mlx("TinyLlama/TinyLlama-1.1B-Chat-v0.6")
 
@@ -56,9 +56,10 @@ answer = outlines.generate.choice(model, ["Positive", "Negative"])(prompt)
 
 ### Model quantization
 
+Run large models on hardware with strong limitations with 4-Bit quantization.
 
 ``` python
-import outlines
+import outlinesmlx as outlines
 
 #model = outlines.models.mlx("microsoft/phi-2",model_kwargs={'trust_remote_code':True, 'quantize':True, 'q_group_size':64,"q_bits":4, "force_conversion":True}, tokenizer_kwargs= {'trust_remote_code':True})
 model = outlines.models.mlx("mistralai/Mistral-7B-Instruct-v0.2",model_kwargs={'trust_remote_code':True, 'quantize':True, 'q_group_size':64,"q_bits":4, "test_loading_instruct":True,"force_conversion":True},tokenizer_kwargs= {'trust_remote_code':True})
