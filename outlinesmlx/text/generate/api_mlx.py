@@ -1,8 +1,8 @@
 import warnings
 from typing import Callable, List, Optional, Union
 
-import outlines
-from outlines.generate.samplers_mlx import Sampler_mlx, multinomial_mlx
+import outlinesmlx 
+from outlinesmlx.generate.samplers_mlx import Sampler_mlx, multinomial_mlx
 
 
 def json(
@@ -17,7 +17,7 @@ def json(
         "The old import path will be removed in Outlines v0.1.0.",
         DeprecationWarning,
     )
-    return outlines.generate.json(model, schema_object, max_tokens, sampler=sampler)
+    return outlinesmlx.generate.json(model, schema_object, max_tokens, sampler=sampler)
 
 
 def regex(
@@ -32,7 +32,7 @@ def regex(
         "The old import path will be removed in Outlines v0.1.0.",
         DeprecationWarning,
     )
-    return outlines.generate.regex(model, regex_str, max_tokens, sampler=sampler)
+    return outlinesmlx.generate.regex(model, regex_str, max_tokens, sampler=sampler)
 
 
 def format(
@@ -43,7 +43,7 @@ def format(
         "The old import path will be removed in Outlines v0.1.0.",
         DeprecationWarning,
     )
-    return outlines.generate.format(model, python_type, max_tokens, sampler=sampler)
+    return outlinesmlx.generate.format(model, python_type, max_tokens, sampler=sampler)
 
 
 def continuation(
@@ -64,7 +64,7 @@ def continuation(
             " at https://github.com/outlines-dev/outlines/issues if you need it implemented."
         )
 
-    return outlines.generate.text(model, max_tokens, sampler=sampler)
+    return outlinesmlx.generate.text(model, max_tokens, sampler=sampler)
 
 
 def choice(
@@ -79,4 +79,4 @@ def choice(
         "The old import path will be removed in Outlines v0.1.0.",
         DeprecationWarning,
     )
-    return outlines.generate.choice(model, choices, max_tokens, sampler)
+    return outlinesmlx.generate.choice(model, choices, max_tokens, sampler)

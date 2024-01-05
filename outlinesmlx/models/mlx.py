@@ -218,16 +218,16 @@ def mlx(
     complete_model_kwargs.update(model_kwargs)
     
     if model_name == "microsoft/phi-2":
-        from outlines.models.mlx_models.Phi2 import load_model
+        from outlinesmlx.models.mlx_models.Phi2 import load_model
         model = load_model(model_name,**complete_model_kwargs)
         tokenizer_kwargs['trust_remote_code']=True
         tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
     elif model_name =="TinyLlama/TinyLlama-1.1B-Chat-v0.6":
-        from outlines.models.mlx_models.tiny_llama import load_model
+        from outlinesmlx.models.mlx_models.tiny_llama import load_model
         model = load_model(model_name,**complete_model_kwargs)
         tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
     elif model_name.startswith("mistralai/Mistral-7B"):
-        from outlines.models.mlx_models.Mistral7B import load_model
+        from outlinesmlx.models.mlx_models.Mistral7B import load_model
         model = load_model(model_name, **complete_model_kwargs)
         tokenizer_kwargs['trust_remote_code'] = True
         tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
@@ -239,19 +239,3 @@ def mlx(
 
     return MLX(model, tokenizer)
 
-
-
-
-
-"""
-if model_name =="mistralai/Mistral-7B-Instruct-v0.2":
-    from outlines.models.mlx_models.Mistral7B import load_model
-    model = load_model(model_name,**complete_model_kwargs)
-    tokenizer_kwargs['trust_remote_code']=True
-    tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
-elif model_name =="mistralai/Mistral-7B-v0.1":
-    from outlines.models.mlx_models.Mistral7B import load_model
-    model = load_model(model_name,**complete_model_kwargs)
-    tokenizer_kwargs['trust_remote_code']=True
-    tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
-"""

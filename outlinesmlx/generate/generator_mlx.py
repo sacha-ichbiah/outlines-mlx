@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING, Callable, Iterator, List, Optional, Tuple, Uni
 import mlx.core as mx
 import numpy as np 
 
-from outlines.fsm.fsm import FSMState
+from outlinesmlx.fsm.fsm import FSMState
 from time import time
 if TYPE_CHECKING:
-    from outlines.fsm.fsm import FSM
-    from outlines.generate.samplers_mlx import Sampler_mlx
+    from outlinesmlx.fsm.fsm import FSM
+    from outlinesmlx.generate.samplers_mlx import Sampler_mlx
     from outlines.models.tokenizer import Tokenizer
 
 

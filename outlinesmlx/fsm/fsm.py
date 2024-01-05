@@ -21,7 +21,7 @@ from lark import Lark
 
 # from outlines.fsm.parsing import PartialLark
 
-from outlines.fsm.regex_pure_numpy import create_fsm_index_tokenizer, make_deterministic_fsm
+from outlinesmlx.fsm.regex_pure_numpy import create_fsm_index_tokenizer, make_deterministic_fsm
 
 if TYPE_CHECKING:
     from outlines.models.tokenizer import Tokenizer

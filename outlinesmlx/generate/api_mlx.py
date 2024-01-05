@@ -3,15 +3,15 @@ from typing import Callable, Iterator, List, Optional, Union
 
 from pydantic import BaseModel
 import mlx.core as mx
-from outlines.fsm.fsm import CFGFSM, FSMState, RegexFSM, StopAtTokenFSM
 from outlines.fsm.json_schema import build_regex_from_object, get_schema_from_signature
 from outlines.fsm.types import python_types_to_regex
-from outlines.generate.generator_mlx import (
+from outlinesmlx.fsm.fsm import CFGFSM, FSMState, RegexFSM, StopAtTokenFSM
+from outlinesmlx.generate.generator_mlx import (
     init_generator_state,
     sequence_generator,
     token_generator,
 )
-from outlines.generate.samplers_mlx import Sampler_mlx, multinomial_mlx
+from outlinesmlx.generate.samplers_mlx import Sampler_mlx, multinomial_mlx
 
 
 class SequenceGenerator:

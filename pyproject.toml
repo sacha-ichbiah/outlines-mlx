@@ -3,9 +3,9 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "outlines"
+name = "outlinesmlx"
 version = "0.0.22"
-authors= [{name = "Outlines Developers"}]
+authors= [{name = "Sacha Ichbiah"}]
 description = "Probabilistic Generative Model Programming"
 requires-python = ">=3.8"
 keywords=[
@@ -38,6 +38,7 @@ dependencies = [
    "referencing",
    "jsonschema",
    "requests",
+   "outlines"
 ]
 
 [project.optional-dependencies]
@@ -55,19 +56,17 @@ test = [
 ]
 
 [project.urls]
-homepage = "https://github.com/outlines-dev/outlines"
-documentation = "https://outlines-dev.github.io/outlines/"
-repository = "https://github.com/outlines-dev/outlines"
+repository = "https://github.com/sacha-ichbiah/outlines-mlx/"
 
 [project.readme]
 file="README.md"
 content-type = "text/markdown"
 
 [tool.setuptools]
-packages = ["outlines"]
+packages = ["outlinesmlx"]
 
 [tool.setuptools.package-data]
-"outlines" = ["py.typed"]
+"outlinesmlx" = ["py.typed"]
 
 
 [tool.pytest.ini_options]
