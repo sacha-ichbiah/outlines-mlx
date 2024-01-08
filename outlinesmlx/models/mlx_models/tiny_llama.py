@@ -295,7 +295,8 @@ def start_conversion(model_name:str):
     print("Model not found. Converting to mlx format...")
 
     model = transformers.AutoModelForCausalLM.from_pretrained(
-        model_name
+        model_name,
+        ignore_mismatched_sizes=True
     ).state_dict()
     config = transformers.AutoConfig.from_pretrained(model_name)
 
