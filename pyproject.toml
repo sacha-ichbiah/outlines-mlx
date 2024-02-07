@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "outlinesmlx"
-version = "0.0.22"
+version = "0.0.27"
 authors= [{name = "Sacha Ichbiah"}]
 description = "Probabilistic Generative Model Programming"
 requires-python = ">=3.8"
@@ -38,7 +38,9 @@ dependencies = [
    "referencing",
    "jsonschema",
    "requests",
-   "outlines"
+   "ai2-olmo",
+   "mlx_lm",
+   "outlines==0.0.27"
 ]
 
 [project.optional-dependencies]

@@ -3,7 +3,7 @@ from typing import Protocol
 import mlx.core as mx
 
 
-class Sampler_mlx(Protocol):
+class Sampler(Protocol):
 
     particles: int
     def __call__(

@@ -4,13 +4,11 @@ from typing import TYPE_CHECKING, Callable, Iterator, List, Union
 
 import mlx.core as mx
 import numpy as np 
-
-
-from outlines.fsm.fsm import FSMState
+from outlinesmlx.fsm.fsm import FSMState
 
 if TYPE_CHECKING:
-    from outlines.fsm.fsm import FSM
-    from outlines.samplers import Sampler
+    from outlinesmlx.fsm.fsm import FSM
+    from outlinesmlx.samplers import Sampler
 
 
 @dataclasses.dataclass(frozen=True)
@@ -144,8 +142,14 @@ def get_next_fsm_states(
     A `mx.array` object that represents the next logit mask.
 
     """
+    #print("next_token_ids", next_token_ids)
+    #print("next_token_ids", next_token_ids[0])
+    #print("next_token_ids", next_token_ids[0][0])
+    #print("next_token_ids", np.array(next_token_ids[0][0]))
+    #print("next_token_ids", int(next_token_ids[0][0]))
+
     return [
-        fsm.next_state(fsm_state, int(token_id[0]))
+        fsm.next_state(fsm_state, int(token_id[0].item()))
         for fsm, fsm_state, token_id in zip(fsms, fsm_states, next_token_ids)
     ]
 
@@ -231,7 +235,7 @@ def expand_attention_masks(attention_masks: mx.array) -> mx.array:
         [
             attention_masks,
             mx.ones(
-                attention_masks.shape[:-1] + [1]
+                attention_masks.shape[:-1] + (1,)
             ),
         ],
         axis=-1,
@@ -259,5 +263,12 @@ def bias_logits(logits: mx.array, allowed_token_ids: List) -> mx.array:
     """
     biased_logits = mx.full(logits.shape, -math.inf)
     for i, ids in enumerate(allowed_token_ids):
-        biased_logits[i, ids] = logits[i, ids]
+        idx = mx.array(ids)
+        biased_logits[i, idx] = logits[i, idx]
+        #for id in ids:
+        #    biased_logits[i, id] = logits[i, id]
+        
     return biased_logits
+
+
+# later, when mlx will have evolved 

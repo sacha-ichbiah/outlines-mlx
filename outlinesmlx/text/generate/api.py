@@ -2,7 +2,7 @@ import warnings
 from typing import Callable, List, Optional, Union
 
 import outlinesmlx 
-from outlinesmlx.generate.samplers_mlx import Sampler_mlx, multinomial_mlx
+from outlinesmlx.samplers import Sampler, MultinomialSampler
 
 
 def json(
@@ -10,7 +10,7 @@ def json(
     schema_object: Union[str, object, Callable],
     max_tokens: Optional[int] = None,
     *,
-    sampler: Sampler_mlx = multinomial_mlx,
+    sampler: Sampler = MultinomialSampler(),
 ):
     warnings.warn(
         "`outlines.text.generate.json` is deprecated, please use `outlines.generate.json` instead. "
@@ -25,7 +25,7 @@ def regex(
     regex_str: str,
     max_tokens: Optional[int] = None,
     *,
-    sampler: Sampler_mlx = multinomial_mlx,
+    sampler: Sampler = MultinomialSampler(),
 ):
     warnings.warn(
         "`outlines.text.generate.regex` is deprecated, please use `outlines.generate.regex` instead. "
@@ -36,7 +36,10 @@ def regex(
 
 
 def format(
-    model, python_type, max_tokens: Optional[int] = None, sampler: Sampler_mlx = multinomial_mlx
+    model,
+    python_type,
+    max_tokens: Optional[int] = None,
+    sampler: Sampler = MultinomialSampler(),
 ):
     warnings.warn(
         "`outlines.text.generate.format` is deprecated, please use `outlines.generate.format` instead. "
@@ -49,22 +52,17 @@ def format(
 def continuation(
     model,
     max_tokens: Optional[int] = None,
+    stop_at: Optional[Union[str, List[str]]] = None,
     *,
-    sampler: Sampler_mlx = multinomial_mlx,
-    stop: Optional[Union[str, List[str]]] = None,
+    sampler: Sampler = MultinomialSampler(),
 ):
     warnings.warn(
         "`outlines.text.generate.continuation` is deprecated, please use `outlines.generate.text` instead. "
         "The old import path will be removed in Outlines v0.1.0.",
         DeprecationWarning,
     )
-    if stop is not None:
-        raise NotImplementedError(
-            "The `stop` keyword is unavailable in the updated API. Please open an issue "
-            " at https://github.com/outlines-dev/outlines/issues if you need it implemented."
-        )
 
-    return outlinesmlx.generate.text(model, max_tokens, sampler=sampler)
+    return outlinesmlx.generate.text(model, max_tokens, stop_at, sampler=sampler)
 
 
 def choice(
@@ -72,11 +70,11 @@ def choice(
     choices: List[str],
     max_tokens: Optional[int] = None,
     *,
-    sampler: Sampler_mlx = multinomial_mlx,
+    sampler: Sampler = MultinomialSampler(),
 ):
     warnings.warn(
         "`outlines.text.generate.choice` is deprecated, please use `outlines.generate.choice` instead. "
         "The old import path will be removed in Outlines v0.1.0.",
         DeprecationWarning,
     )
-    return outlinesmlx.generate.choice(model, choices, max_tokens, sampler)
+    return outlinesmlx.generate.choice(model, choices, max_tokens, sampler=sampler)

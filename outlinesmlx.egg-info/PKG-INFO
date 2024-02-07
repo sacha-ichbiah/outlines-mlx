@@ -1,3 +1,49 @@
+Metadata-Version: 2.1
+Name: outlinesmlx
+Version: 0.0.27
+Summary: Probabilistic Generative Model Programming
+Author: Sacha Ichbiah
+Project-URL: repository, https://github.com/sacha-ichbiah/outlines-mlx/
+Keywords: machine learning,deep learning,language models,guided generation
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: interegular
+Requires-Dist: jinja2
+Requires-Dist: lark
+Requires-Dist: nest_asyncio
+Requires-Dist: numpy
+Requires-Dist: perscache
+Requires-Dist: pydantic>=2.0
+Requires-Dist: scipy
+Requires-Dist: torch>=2.1
+Requires-Dist: numba
+Requires-Dist: joblib
+Requires-Dist: referencing
+Requires-Dist: jsonschema
+Requires-Dist: requests
+Requires-Dist: ai2-olmo
+Requires-Dist: mlx_lm
+Requires-Dist: outlines==0.0.27
+Provides-Extra: test
+Requires-Dist: pre-commit; extra == "test"
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Requires-Dist: transformers; extra == "test"
+Requires-Dist: coverage[toml]>=5.1; extra == "test"
+Requires-Dist: diff-cover; extra == "test"
+Requires-Dist: accelerate; extra == "test"
+Requires-Dist: beartype<0.16.0; extra == "test"
+Requires-Dist: datasets; extra == "test"
+Requires-Dist: responses; extra == "test"
+
 
 
 # Outlines-mlx

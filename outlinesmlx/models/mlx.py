@@ -1,12 +1,18 @@
 from typing import TYPE_CHECKING, List, Optional, Tuple, Union, Any
 
+if TYPE_CHECKING:
+    from transformers import PreTrainedTokenizer
+import mlx.core as mx
+import mlx_lm
+
+
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union, Any
+
 
 from outlines.models.tokenizer import Tokenizer
 if TYPE_CHECKING:
     from transformers import PreTrainedModel, PreTrainedTokenizer
-import mlx.core as mx
 import numpy as np 
-from mlx.utils import tree_unflatten
 from transformers import AutoTokenizer
 
 __all__ = ["transformers"]
@@ -120,14 +126,8 @@ class MLX:
 class TransformerTokenizer(Tokenizer):
     """Represents a tokenizer for models in the `transformers` library."""
 
-    def __init__(self, model_name: str, **kwargs):
-        from transformers import AutoTokenizer
-
-        kwargs.setdefault("padding_side", "left")
-        self.model_name = model_name
-        # TODO: Do something to make this hashable?
-        self.kwargs = kwargs
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, **kwargs)
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
         self.eos_token_id = self.tokenizer.eos_token_id
         self.eos_token = self.tokenizer.eos_token
 
@@ -177,13 +177,13 @@ class TransformerTokenizer(Tokenizer):
 
         return hash(Hasher.hash(self.tokenizer))
 
-
+    
 def mlx(
     model_name: str,
-    device: Optional[str] = None,
-    model_kwargs: dict = {},
-    tokenizer_kwargs: dict = {},  
+    tokenizer_kwargs: dict = {},
+    adapter_file: Optional[str] = None
 ):
+    
     
     """Instantiate a model from a predefined set of models and its tokenizer from 'transformers'.
 
@@ -191,15 +191,12 @@ def mlx(
     ----------
     model_name
         The name of the model as listed on Hugging Face's model page.
-    device
-        The device(s) on which the model should be loaded. This overrides
-        the `device_map` entry in `model_kwargs` when provided.
-    model_kwargs
-        A dictionary that contains the keyword arguments to pass to the
-        `from_pretrained` method when loading the model.
     tokenizer_kwargs
         A dictionary that contains the keyword arguments to pass to the
         `from_pretrained` method when loading the tokenizer.
+    adapter_file : Optional[str], optional
+        Path to the adapter file. If provided, applies LoRA layers to the model. Defaults to None.
+        
 
     Returns
     -------
@@ -207,35 +204,9 @@ def mlx(
 
     """
 
-    complete_model_kwargs = {
-        'quantize': False,
-        'q_group_size': 64,
-        'q_bits': 4,
-        'force_conversion':False
-    }
-
-    # Update default values with any provided arguments
-    complete_model_kwargs.update(model_kwargs)
-    
-    if model_name == "microsoft/phi-2":
-        from outlinesmlx.models.mlx_models.Phi2 import load_model
-        model = load_model(model_name,**complete_model_kwargs)
-        tokenizer_kwargs['trust_remote_code']=True
-        tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
-    elif model_name =="TinyLlama/TinyLlama-1.1B-Chat-v0.6":
-        from outlinesmlx.models.mlx_models.tiny_llama import load_model
-        model = load_model(model_name,**complete_model_kwargs)
-        tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
-    elif model_name.startswith("mistralai/Mistral-7B"):
-        from outlinesmlx.models.mlx_models.Mistral7B import load_model
-        model = load_model(model_name, **complete_model_kwargs)
-        tokenizer_kwargs['trust_remote_code'] = True
-        tokenizer = TransformerTokenizer(model_name, **tokenizer_kwargs)
-
-
-    else: 
-        return NotImplementedError("Unknown model")
-
+    model, hf_tokenizer =  mlx_lm.load(model_name, tokenizer_kwargs, adapter_file)
+    tokenizer_kwargs['trust_remote_code']=True
+    tokenizer = TransformerTokenizer(hf_tokenizer)
 
     return MLX(model, tokenizer)
 
