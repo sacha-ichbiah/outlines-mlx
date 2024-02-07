@@ -1,16 +1,16 @@
 import dataclasses
 import math
-from typing import TYPE_CHECKING, Callable, Iterator, List, Optional, Tuple, Union,Any
+from typing import TYPE_CHECKING, Callable, Iterator, List, Union
 
 import mlx.core as mx
 import numpy as np 
 
-from outlinesmlx.fsm.fsm import FSMState
-from time import time
+
+from outlines.fsm.fsm import FSMState
+
 if TYPE_CHECKING:
-    from outlinesmlx.fsm.fsm import FSM
-    from outlinesmlx.generate.samplers_mlx import Sampler_mlx
-    from outlines.models.tokenizer import Tokenizer
+    from outlines.fsm.fsm import FSM
+    from outlines.samplers import Sampler
 
 
 @dataclasses.dataclass(frozen=True)
@@ -21,36 +21,12 @@ class GenerationState:
     fsm_states: List[FSMState]
 
 
-def init_generator_state(
-    tokenizer: "Tokenizer",
-    prompt: Union[str, List[str]],
-    kv_cache: Optional[mx.array] = None,
-) -> Tuple[mx.array, mx.array, mx.array]:
-    """Initialize the generation state.
-
-    This method is responsible for encoding the prompt.
-
-    Parameters
-    ----------
-    prompt
-        The prompt on which the generation is conditioned.
-    
-    Returns
-    -------
-    A `GenerationState` object.
-
-    """
-    token_ids, attention_masks = tokenizer.encode(prompt)
-
-    return token_ids, attention_masks, kv_cache
-
-
 def sequence_generator(
     token_generator: Callable,
-    fsm: "FSM",
-    init_state: Tuple[Any,Any,Any],
+    fsms: List["FSM"],
+    token_ids: mx.array,
+    attention_masks: mx.array,
     fsm_states: List[FSMState],
-    rng: mx.array
 ) -> Iterator[GenerationState]:
     """Generates sequences of tokens.
 
@@ -59,45 +35,54 @@ def sequence_generator(
     token_generator
         A callable that generate a new token given the current generation state
         and logits biases.
-    fsm
-        The finite-state machine that drives the text generation.
+    fsms
+        List of finite-state machines that drive the text generation,
+        one for each sequence in the batch.
     init_state
         The initial generation state for the batches.
     fsm_states
         The initial states of the finite-state machine for each sequence in the batch.
-    rng
-        The state of the random number generator.
+
     Yields
     ------
     A new sequence.
 
     """
-    token_ids, attention_masks, kv_cache = init_state
+    kv_cache = None
+
     while True:
-        allowed_tokens = get_allowed_tokens(fsm, fsm_states)
+        allowed_tokens = get_allowed_tokens(fsms, fsm_states)
 
         next_token_ids, kv_cache, logits, _ = token_generator(
             token_ids,
             attention_masks,
             kv_cache,
-            rng=rng,
             allowed_tokens=allowed_tokens,
         )
-
         token_ids = update_token_ids(token_ids, next_token_ids)
         attention_masks = expand_attention_masks(attention_masks)
 
-        fsm_states = get_next_fsm_states(fsm, fsm_states, next_token_ids)
-        is_finished = is_generation_finished(fsm, fsm_states)
+        fsm_states = get_next_fsm_states(fsms, fsm_states, next_token_ids)
+        is_finished = is_generation_finished(fsms, fsm_states)
 
         if is_finished:
-            yield GenerationState(token_ids, kv_cache, logits, fsm_states)
+            yield GenerationState(
+                token_ids,
+                kv_cache,
+                logits,
+                fsm_states,
+            )
             return
 
-        yield GenerationState(token_ids, kv_cache, logits, fsm_states)
+        yield GenerationState(
+            token_ids,
+            kv_cache,
+            logits,
+            fsm_states,
+        )
 
 
-def token_generator(model, sampler: "Sampler_mlx") -> Callable:
+def token_generator(model, sampler: "Sampler") -> Callable:
     """Generate one token at a time.
 
     This process is designed to be steered by another supervising
@@ -120,12 +105,12 @@ def token_generator(model, sampler: "Sampler_mlx") -> Callable:
     logits that were returned by the model.
 
     """
+
     def generate(
         token_ids: mx.array,
         attention_masks: mx.array,
         kv_cache: mx.array,
         allowed_tokens: List[List[int]],
-        rng: mx.array,
     ) -> Union[mx.array, mx.array, mx.array, mx.array]:
         try:
             logits, new_kv_cache = model(token_ids, attention_masks, kv_cache)
@@ -135,8 +120,7 @@ def token_generator(model, sampler: "Sampler_mlx") -> Callable:
             )
 
         biased_logits = bias_logits(logits, allowed_tokens)
-        #sampler to mlx
-        next_token_ids = sampler(biased_logits,1, rng)
+        next_token_ids = sampler(biased_logits)
 
         return next_token_ids, new_kv_cache, logits, biased_logits
 
@@ -144,7 +128,7 @@ def token_generator(model, sampler: "Sampler_mlx") -> Callable:
 
 
 def get_next_fsm_states(
-    fsm: "FSM", fsm_states: List[FSMState], next_token_ids: mx.array
+    fsms: List["FSM"], fsm_states: List[FSMState], next_token_ids: mx.array
 ) -> List[FSMState]:
     """
 
@@ -161,14 +145,12 @@ def get_next_fsm_states(
 
     """
     return [
-        fsm.next_state(fsm_state, int(np.array(token_id[0])), idx)
-        for idx, fsm_state, token_id in zip(
-            range(len(fsm_states)), fsm_states, next_token_ids
-        )
+        fsm.next_state(fsm_state, int(token_id[0]))
+        for fsm, fsm_state, token_id in zip(fsms, fsm_states, next_token_ids)
     ]
 
 
-def get_allowed_tokens(fsm: "FSM", fsm_states: List[FSMState]) -> List[List[int]]:
+def get_allowed_tokens(fsms: List["FSM"], fsm_states: List[FSMState]) -> List[List[int]]:
     """Get the new instructions for each sequence from the finite-state machine.
 
     Parameters
@@ -183,10 +165,10 @@ def get_allowed_tokens(fsm: "FSM", fsm_states: List[FSMState]) -> List[List[int]
     A nested list that contains the ids of the logits to keep.
 
     """
-    return [fsm.allowed_token_ids(state, idx) for idx, state in enumerate(fsm_states)]
+    return [fsm.allowed_token_ids(state) for fsm, state in zip(fsms, fsm_states)]
 
 
-def is_generation_finished(fsm: "FSM", fsm_states: List[FSMState]) -> bool:
+def is_generation_finished(fsms: List["FSM"], fsm_states: List[FSMState]) -> bool:
     """Determine if the generation is finished.
 
     A generation is considered finished if the FSM of every sequence in the
@@ -207,7 +189,7 @@ def is_generation_finished(fsm: "FSM", fsm_states: List[FSMState]) -> bool:
     Whether all sequences are finished sampling.
 
     """
-    return all([fsm.is_final_state(state, idx) for idx, state in enumerate(fsm_states)])
+    return all([fsm.is_final_state(state) for fsm, state in zip(fsms, fsm_states)])
 
 
 def update_token_ids(
@@ -229,8 +211,7 @@ def update_token_ids(
     just generated.
 
     """
-    updated_token_ids = mx.concatenate([token_ids, next_token_ids], axis=-1)
-    return updated_token_ids
+    return mx.concatenate([token_ids, next_token_ids], axis=-1)
 
 
 def expand_attention_masks(attention_masks: mx.array) -> mx.array:
@@ -246,7 +227,7 @@ def expand_attention_masks(attention_masks: mx.array) -> mx.array:
     The attention masks padded with 1s.
 
     """
-    expanded_mask = mx.concatenate(
+    return mx.concatenate(
         [
             attention_masks,
             mx.ones(
@@ -255,13 +236,9 @@ def expand_attention_masks(attention_masks: mx.array) -> mx.array:
         ],
         axis=-1,
     )
-    return expanded_mask
 
 
-def bias_logits(
-    logits: mx.array,
-    ids_to_mask: List[List[int]],
-) -> mx.array:
+def bias_logits(logits: mx.array, allowed_token_ids: List) -> mx.array:
     """Mask the logits.
 
     The function iterates over a nested list where each list corresponds to the
@@ -272,17 +249,15 @@ def bias_logits(
     logits
         Two dimensional tensor that contains the next-token probability
         distribution.
-    ids_to_mask
-        The ids to mask in each dimension.
+    allowed_token_ids
+        A list that contains the tokens that can be generated by the model.
 
     Returns
     -------
     A view of the original logits tensor where some values are masked.
 
     """
-    biased_logits = mx.zeros(logits.shape)
-    for i, ids in enumerate(mx.array(ids_to_mask)):
-        mask = mx.full((logits.shape[-1],), -math.inf)
-        mask[ids] = 0
-        biased_logits[i] = logits[i] + mask
+    biased_logits = mx.full(logits.shape, -math.inf)
+    for i, ids in enumerate(allowed_token_ids):
+        biased_logits[i, ids] = logits[i, ids]
     return biased_logits
