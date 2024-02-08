@@ -48,7 +48,7 @@ Check the Examples folder and the original [Outlines](https://github.com/outline
 ``` python
 import outlinesmlx as outlines
 
-model = outlines.models.mlx("TinyLlama/TinyLlama-1.1B-Chat-v0.6")
+model = outlines.models.mlx("mlx-community/Mistral-7B-Instruct-v0.1-4bit-mlx")
 
 prompt = """You are a sentiment-labelling assistant.
 Is the following review positive or negative?
