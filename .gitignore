@@ -1,0 +1,13 @@
+__pycache__/
+dist
+*.egg-info/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# macOS system files
+.DS_Store
+
+# IPython
+profile_default/
+ipython_config.py
