@@ -11,18 +11,16 @@ Combined with [MLX](https://github.com/ml-explore/mlx), it allows to perform gui
 ## Design principles
 
 We design it as an adapter that replaces the Pytorch parts of the original Outlines library, to replace it with MLX compatible parts.
-
 We will continue to update it actively as Outlines evolves with time. 
 
 ## Why Outlines MLX ?
 
-We are convinced that guided generation is an important technology that will define the future of AI applications beyond chatbots. As the Apple Silicon ML accelerators  become increasingly powerful, we want to extend guided-generation capabilities to this family of devices.
+We are convinced that guided generation is an important technology that will define the future of AI applications beyond chatbots. As the Apple Silicon ML accelerators  become increasingly powerful, we want to extend guided-generation capabilities to this family of devices. The original [Outlines](https://github.com/outlines-dev/outlines/) library relies on Pytorch, and adapting it to MLX requires to change many keys components.
 
 ## Installation
+
 ``` bash
-git clone sacha-ichbiah/outlines-mlx
-cd outlines-mlx
-pip install -e . 
+pip install outlinesmlx
 ```
 
 
