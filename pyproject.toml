@@ -39,8 +39,9 @@ dependencies = [
    "jsonschema",
    "requests",
    "ai2-olmo",
-   "mlx_lm",
-   "outlines==0.0.27"
+   "mlx_lm==0.0.8",
+   "outlines==0.0.27",
+   "mlx==0.1.0"
 ]
 
 [project.optional-dependencies]

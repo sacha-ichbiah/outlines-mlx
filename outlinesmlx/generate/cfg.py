@@ -1,7 +1,7 @@
 from functools import singledispatch
 from typing import List, Optional, Union
 
-from outlinesmlx.fsm.fsm import CFGFSM
+from outlines.fsm.fsm import CFGFSM
 from outlinesmlx.generate.api import SequenceGenerator
 from outlinesmlx.samplers import Sampler, multinomial
 

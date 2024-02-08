@@ -14,11 +14,8 @@ setup.cfg
 ./outlinesmlx.egg-info/requires.txt
 ./outlinesmlx.egg-info/top_level.txt
 __pycache__/mlx.cpython-311.pyc
-examples/Readme.md
-examples/prompt-Copy1.ipynb
-examples/prompt.ipynb
-examples/.ipynb_checkpoints/prompt-Copy1-checkpoint.ipynb
-examples/.ipynb_checkpoints/prompt-checkpoint.ipynb
+examples/Examples.ipynb
+examples/.ipynb_checkpoints/Examples-checkpoint.ipynb
 outlinesmlx/__init__.py
 outlinesmlx/_version.py
 outlinesmlx/function.py
@@ -31,12 +28,6 @@ outlinesmlx.egg-info/top_level.txt
 outlinesmlx/__pycache__/__init__.cpython-311.pyc
 outlinesmlx/__pycache__/function.cpython-311.pyc
 outlinesmlx/__pycache__/samplers.cpython-311.pyc
-outlinesmlx/fsm/__init__.py
-outlinesmlx/fsm/fsm.py
-outlinesmlx/fsm/regex_pure_numpy.py
-outlinesmlx/fsm/__pycache__/__init__.cpython-311.pyc
-outlinesmlx/fsm/__pycache__/fsm.cpython-311.pyc
-outlinesmlx/fsm/__pycache__/regex_pure_numpy.cpython-311.pyc
 outlinesmlx/generate/__init__.py
 outlinesmlx/generate/api.py
 outlinesmlx/generate/cfg.py

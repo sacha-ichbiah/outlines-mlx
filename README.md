@@ -1,17 +1,23 @@
 
+# outlinesmlx
 
-# Outlines-mlx
-    
-Outlines MLX is a minimalistic library aims at adapting the Outlines library within the MLX framework.
+outlinesmlx is a minimalistic library aims at adapting the Outlines library within the MLX framework. `pip install outlinesmlx`
 [Outlines](https://github.com/outlines-dev/outlines/) provides ways to control the generation of language models to make their output more predictable.
 Combined with [MLX](https://github.com/ml-explore/mlx), it allows to perform guided-generation with large language models while leveraging Apple Silicon hardware. 
 
-<img src="logo.png" alt="Outlines-MLX" width=300></img>
+<img src="https://raw.githubusercontent.com/sacha-ichbiah/outlines-mlx/main/logo.png" alt="Outlines-MLX" width=300></img>
 
 ## Design principles
 
 We design it as an adapter that replaces the Pytorch parts of the original Outlines library, to replace it with MLX compatible parts.
 We will continue to update it actively as Outlines evolves with time. 
+
+### Versioning: 
+outlinesmlx-x is the mlx adapter to outlines-x. It can easily be checked with a `pip list`
+``` bash
+outlines                             0.0.27
+outlinesmlx                          0.0.27 
+```
 
 ## Why Outlines MLX ?
 
@@ -19,31 +25,25 @@ We are convinced that guided generation is an important technology that will def
 
 ## Installation
 
+outlinesmlx can be installed directly from the pipy repository:
+
 ``` bash
 pip install outlinesmlx
 ```
 
 
-## Features
-
-Check the original repository to see the available features.
-
-
 ## Supported models
 
-The supported models are:
+The models are imported using the library [mlx-lm](https://github.com/outlines-dev/outlines/).
 
-| Models                             | 
-|------------------------------------|
-| TinyLlama/TinyLlama-1.1B-Chat-v0.6 |
-| microsoft/phi-2                    |
-| mistralai/Mistral-7B               |
+In this way, you can also import seemlessly quantized models. 
 
+You can import any model from the HuggingFace hub using this library. 
 
 
 ### Load model with a MLX backend
 
-Check the original [Outlines](https://github.com/outlines-dev/outlines/) library for more use cases.
+Check the Examples folder and the original [Outlines](https://github.com/outlines-dev/outlines/) library for more use cases.
 
 ``` python
 import outlinesmlx as outlines
@@ -59,29 +59,16 @@ answer = outlines.generate.choice(model, ["Positive", "Negative"])(prompt)
 ```
 
 
-
-### Model quantization
-
-Run large models on hardware with strong limitations with 4-Bit quantization.
-
-``` python
-import outlinesmlx as outlines
-
-#model = outlines.models.mlx("microsoft/phi-2",model_kwargs={'trust_remote_code':True, 'quantize':True, 'q_group_size':64,"q_bits":4, "force_conversion":True}, tokenizer_kwargs= {'trust_remote_code':True})
-model = outlines.models.mlx("mistralai/Mistral-7B-Instruct-v0.2",model_kwargs={'trust_remote_code':True, 'quantize':True, 'q_group_size':64,"q_bits":4, "test_loading_instruct":True,"force_conversion":True},tokenizer_kwargs= {'trust_remote_code':True})
-
-prompt = "What is the IP address of the Google DNS servers? "
-
-guided = outlines.generate.regex(model, r"((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)", max_tokens=30)(prompt)
-
-print(guided)
-# What is the IP address of the Google DNS servers?
-# 2.2.6.1
-```
-
 ### Disclaimer
 
-This library is not up to date. It was designed to perform experiments with guided generation on Apple Silicon M1/M2. Please check the original [Outlines](https://github.com/outlines-dev/outlines/) library for an up-to-date implementation. 
+This library is maintained on a monthly basis. Due to the rapid evolution of the MLX framework and the original Outlines library, it may not be up-to-date with their latest advancements. outlinesmlx is designed to perform experiments with guided generation on Apple Silicon. Please check the original [Outlines](https://github.com/outlines-dev/outlines/) library for an up-to-date implementation. 
+
+outlinesmlx is only compatible with mlx models. If you want to do guided generation using transformers or other architectures, please use the original [Outlines](https://github.com/outlines-dev/outlines/) library.
+
+### Contributions
+
+We are welcoming external contributions !
+
 
 ### Citation
 
