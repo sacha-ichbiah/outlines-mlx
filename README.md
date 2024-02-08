@@ -34,7 +34,7 @@ pip install outlinesmlx
 
 ## Supported models
 
-The models are imported using the library [mlx-lm](https://github.com/outlines-dev/outlines/).
+The models are imported using the library [mlx-lm](https://github.com/ml-explore/mlx-examples/tree/main/llms/).
 
 In this way, you can also import seemlessly quantized models. 
 
