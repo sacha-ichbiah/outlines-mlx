@@ -20,7 +20,7 @@ from typing import Iterator, List, Optional, Union
 
 import mlx.core as mx
 
-from outlines.fsm.fsm import FSMState
+from outlinesmlx.fsm.fsm import FSMState
 from outlinesmlx.generate.generator import sequence_generator, token_generator
 
 

@@ -21,10 +21,10 @@ from typing import TYPE_CHECKING, Callable, Iterator, List, Union
 
 import mlx.core as mx
 import numpy as np 
-from outlines.fsm.fsm import FSMState
+from outlinesmlx.fsm.fsm import FSMState
 
 if TYPE_CHECKING:
-    from outlines.fsm.fsm import FSM
+    from outlinesmlx.fsm.fsm import FSM
     from outlinesmlx.samplers import Sampler
 
 

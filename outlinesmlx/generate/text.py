@@ -19,7 +19,7 @@ import warnings
 from functools import singledispatch
 from typing import List, Optional, Union
 
-from outlines.fsm.fsm import StopAtEosFSM
+from outlinesmlx.fsm.fsm import StopAtEosFSM
 from outlinesmlx.generate import SequenceGenerator
 from outlinesmlx.samplers import Sampler, multinomial
 

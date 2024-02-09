@@ -18,7 +18,7 @@ limitations under the License.
 from functools import singledispatch
 from typing import Optional
 
-from outlines.fsm.fsm import RegexFSM
+from outlinesmlx.fsm.fsm import RegexFSM
 from outlinesmlx.generate.api import SequenceGenerator
 from outlinesmlx.samplers import Sampler, multinomial
 
